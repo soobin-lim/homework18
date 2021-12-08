@@ -21,11 +21,14 @@ async function initExercise() {
   let workout;
 
   if (location.search.split("=")[1] === undefined) {
+    console.log('location.search is undefined so.. createWorkoutand to get location.search')
     workout = await API.createWorkout()
     console.log(workout)
   }
   if (workout) {
     location.search = "?id=" + workout._id;
+  } else {
+    console.log('initExercise=>work out is empty, workout :'+workout)
   }
 
 }

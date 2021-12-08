@@ -11,8 +11,10 @@ const API = {
     return json[json.length - 1];
   },
   async addExercise(data) {
+    console.log('api.js addExercise(data) data is ok : '+ JSON.stringify(data))
+    console.log('location.search:'+location.search.hash)
     const id = location.search.split("=")[1];
-
+    console.log('api.js add exercise id :'+id); // id doesnt come
     const res = await fetch("/api/workouts/" + id, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
