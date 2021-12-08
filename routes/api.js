@@ -32,4 +32,16 @@ router.get("/api/workout", (req, res) => {
     });
 });
 
+router.get('/', (req, res)=>{
+  res.sendFile('/public/index.html', { root: '.' })
+});
+
+router.get('/stats', (req, res)=>{
+  res.sendFile('/public/stats.html', { root: '.' })
+});
+
+router.get('/exercise', (req, res)=>{
+  res.sendFile('/public/exercise.html', { root: '.' })
+});
+
 module.exports = router;
