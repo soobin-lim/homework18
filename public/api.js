@@ -7,23 +7,35 @@ const API = {
       console.log(err)
     }
     const json = await res.json();
-
+    console.log(json[json.length - 1])
     return json[json.length - 1];
   },
   async addExercise(data) {
-    console.log('api.js addExercise(data) data is ok : '+ JSON.stringify(data))
-    console.log('location.search is okay?:'+location.search)
+    console.log('api.js addExercise(data) data is ok : ' + JSON.stringify(data))
+    console.log('location.search is okay?:' + location.search)
     const id = location.search.split("=")[1];
-    console.log('api.js add exercise id comes? :'+id); // id doesnt come
-    const res = await fetch("/api/workouts/" + id, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-    console.log(res)
-    const json = await res.json();
-    console.log(json)
-    return json;
+    console.log('api.js add exercise id comes? :' + id); // id doesnt come
+    console.log(id);
+    if (id == 'undefined') {    // why it is string? 'undefined'
+      console.log('api/workouts (POST to create new workout)')
+      console.log(data);
+      const respond2 = await fetch("/api/workouts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      console.log(respond2);
+    } else {
+      const res = await fetch("/api/workouts/" + id, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+      console.log(res)
+      const json = await res.json();
+      console.log(json)
+      return json;
+    }
   },
   async createWorkout(data = {}) {
     const res = await fetch("/api/workouts", {
@@ -40,7 +52,7 @@ const API = {
   async getWorkoutsInRange() {
     const res = await fetch(`/api/workouts/range`);
     const json = await res.json();
-
+    console.log('getWorkoutsInRange json')
     return json;
   },
 };

@@ -19,7 +19,7 @@ let shouldNavigateAway = false;
 
 async function initExercise() {
   let workout;
-  // if continuing from last exercise
+  // if continuing from
   console.log('initExercise location.search'+location.search) 
   if (location.search.split("=")[1] === undefined) {
     console.log('location.search is undefined so.. createWorkoutand to get location.search')

@@ -1,31 +1,44 @@
 const router = require("express").Router();
 const Workout = require("../models/Workout");
-const mongojs = require("mongojs");
+var mongoose = require('mongoose'); // connection between mongodb and express
+const mongojs = require('mongojs'); // using mongo database
 
 router.post("/api/workouts", ({ body }, res) => {
-  Workout.create(body)
+  console.log('routers api')
+  console.log('body:' + body)
+  var objectId = mongoose.Types.ObjectId();
+  var day = new Date();
+  var tmpObj = {
+    _id: objectId,
+    day: day,
+    exercises: []
+  }
+  console.log(tmpObj)
+
+  Workout.create(tmpObj)
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
     .catch(err => {
       res.status(400).json(err);
     });
+
 })
 
 router.get("/api/workouts/:id", async (req, res) => {
   let body = req.body;
-  const response1 = await Workout.findOne({_id: mongojs.ObjectId(req.params.id)})
+  const response1 = await Workout.findOne({ _id: mongojs.ObjectId(req.params.id) })
   console.log(response1)
 })
 
 router.put("/api/workouts/:id", async (req, res) => {
   console.log('put')
   let body = req.body;
-  
+
   console.log('router, api/workouts/:id:' + req.params.id + "body content:" + body)
 
-  const response = await Workout.findOneAndUpdate({_id: mongojs.ObjectId(req.params.id)},
-     {$push: { exercises: body }})
+  const response = await Workout.findOneAndUpdate({ _id: mongojs.ObjectId(req.params.id) },
+    { $push: { exercises: body } })
 
   console.log(response);
 
@@ -36,16 +49,36 @@ router.put("/api/workouts/:id", async (req, res) => {
   }
 
 })
+router.get('/api/workouts/range', ({ body }, res) => {
 
+})
 
+//getLastWorkout
+//lastWorkout._id, day, totalDuration, exercises.length, exercises
 router.get("/api/workouts", ({ body }, res) => {
-  Workout.find({})
-    .then(dbWorkout => {
-      res.json(dbWorkout);
-    })
-    .catch(err => {
-      res.status(400).json(err);
-    });
+  Workout.aggregate([
+    {
+      "$match": {}
+    },
+    {
+      "$group": {
+        "_id": {},
+        "totalDuration": {"$sum": "$exercises.duration"}
+      }
+    }
+  ]).then((result)=>{
+    console.log(result)
+    res.json(result)
+  })
+
+  // Workout.find({})
+  //   .then(dbWorkout => {
+  //     res.json(dbWorkout);
+  //   })
+  //   .catch(err => {
+  //     res.status(400).json(err);
+  //   });
+
 })
 
 router.post("/api/workout/:id", ({ body }, res) => {

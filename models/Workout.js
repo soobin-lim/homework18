@@ -27,9 +27,15 @@ const workOutSchema = new Schema({
     },
     sets: {
       type: Number
+    },
+    distance: {
+      type: Number
     }
   }]
-});
+},
+  {
+    versionKey: false // deleting "__v"
+  });
 
 const workOut = mongoose.model("Workout", workOutSchema);
 
