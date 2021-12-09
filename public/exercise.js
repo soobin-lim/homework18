@@ -18,9 +18,10 @@ let workoutType = null;
 let shouldNavigateAway = false;
 
 async function initExercise() {
+  console.log('initExercise')
   let workout;
   // if continuing from
-  console.log('initExercise location.search'+location.search) 
+  console.log('initExercise location.search' + location.search)
   if (location.search.split("=")[1] === undefined) {
     console.log('location.search is undefined so.. createWorkoutand to get location.search')
     workout = await API.createWorkout()
@@ -28,7 +29,7 @@ async function initExercise() {
   }
   if (workout) {
     location.search = "?id=" + workout._id;
-  } 
+  }
 }
 
 initExercise();
@@ -97,6 +98,7 @@ function validateInputs() {
 }
 
 async function handleFormSubmit(event) {
+  console.log('handleFormSubmit')
   event.preventDefault();
 
   let workoutData = {};
@@ -114,13 +116,16 @@ async function handleFormSubmit(event) {
     workoutData.reps = Number(repsInput.value.trim());
     workoutData.duration = Number(resistanceDurationInput.value.trim());
   }
-
+  toast.classList.add("success");
+  console.log('change toast classList to success' + toast)
   await API.addExercise(workoutData);
   clearInputs();
-  toast.classList.add("success");
+  // toast.classList.add("success");
+  // console.log('change toast classList to success' + toast)
 }
 
 function handleToastAnimationEnd() {
+  console.log('remoteattribute class from toast - toast animation end')
   toast.removeAttribute("class");
   if (shouldNavigateAway) {
     location.href = "/";

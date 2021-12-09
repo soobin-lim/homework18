@@ -24,15 +24,17 @@ const API = {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
-      console.log(respond2);
+      let json = await respond2.json();
+      console.log(json)
+      return json;
     } else {
       const res = await fetch("/api/workouts/" + id, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
       });
-      console.log(res)
-      const json = await res.json();
+      
+      let json = await res.json();
       console.log(json)
       return json;
     }
@@ -50,9 +52,12 @@ const API = {
   },
 
   async getWorkoutsInRange() {
-    const res = await fetch(`/api/workouts/range`);
+    console.log('getWorkoutsInRange')
+    const res = await fetch(`/api/workoutss/range`, {
+      method: 'GET'
+    });   // err
     const json = await res.json();
-    console.log('getWorkoutsInRange json')
+    console.log('getWorkoutsInRange json'+json)
     return json;
   },
 };

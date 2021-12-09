@@ -5,7 +5,7 @@ const mongojs = require('mongojs'); // using mongo database
 
 router.post("/api/workouts", ({ body }, res) => {
   console.log('routers api')
-  console.log('body:' + body)
+  // console.log('body:' + body)
   var objectId = mongoose.Types.ObjectId();
   var day = new Date();
   var tmpObj = {
@@ -13,7 +13,7 @@ router.post("/api/workouts", ({ body }, res) => {
     day: day,
     exercises: []
   }
-  console.log(tmpObj)
+  // console.log(tmpObj)
 
   Workout.create(tmpObj)
     .then(dbWorkout => {
@@ -32,15 +32,15 @@ router.get("/api/workouts/:id", async (req, res) => {
 })
 
 router.put("/api/workouts/:id", async (req, res) => {
-  console.log('put')
+  // console.log('put')
   let body = req.body;
 
-  console.log('router, api/workouts/:id:' + req.params.id + "body content:" + body)
+  // console.log('router, api/workouts/:id:' + req.params.id + "body content:" + body)
 
   const response = await Workout.findOneAndUpdate({ _id: mongojs.ObjectId(req.params.id) },
     { $push: { exercises: body } })
 
-  console.log(response);
+  // console.log(response);
 
   if (response.ok) {
     res.status(200)
@@ -49,14 +49,31 @@ router.put("/api/workouts/:id", async (req, res) => {
   }
 
 })
-router.get('/api/workouts/range', ({ body }, res) => {
-
+router.get('/api/workoutss/range', (req, res) => {
+  console.log('routes - /api/workouts/range - get')
+  //range means..
+  // * View the combined weight of multiple exercises from the past seven workouts on the `stats` page.
+  // * View the total duration of each workout from the past seven workouts on the `stats` page.
+  Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: {
+          $sum: '$exercises.duration',
+        },
+        // calculateTotalWeight
+        // limit: 7
+      },
+    },
+  ]).then((result) => {
+    // console.log(result)
+    res.json(result)
+  })
 })
 
 //getLastWorkout
 //lastWorkout._id, day, totalDuration, exercises.length, exercises
 router.get("/api/workouts", ({ body }, res) => {
-  
+
   Workout.aggregate([
     {
       $addFields: {
@@ -65,8 +82,8 @@ router.get("/api/workouts", ({ body }, res) => {
         },
       },
     },
-  ]).then((result)=>{
-    console.log(result)
+  ]).then((result) => {
+    // console.log(result)
     res.json(result)
   })
 
