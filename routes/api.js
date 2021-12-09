@@ -56,16 +56,15 @@ router.get('/api/workouts/range', ({ body }, res) => {
 //getLastWorkout
 //lastWorkout._id, day, totalDuration, exercises.length, exercises
 router.get("/api/workouts", ({ body }, res) => {
+  
   Workout.aggregate([
     {
-      "$match": {}
+      $addFields: {
+        totalDuration: {
+          $sum: '$exercises.duration',
+        },
+      },
     },
-    {
-      "$group": {
-        "_id": {},
-        "totalDuration": {"$sum": "$exercises.duration"}
-      }
-    }
   ]).then((result)=>{
     console.log(result)
     res.json(result)
