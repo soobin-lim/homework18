@@ -12,17 +12,17 @@ const API = {
   },
   async addExercise(data) {
     console.log('api.js addExercise(data) data is ok : '+ JSON.stringify(data))
-    console.log('location.search:'+location.search.hash)
+    console.log('location.search is okay?:'+location.search)
     const id = location.search.split("=")[1];
-    console.log('api.js add exercise id :'+id); // id doesnt come
+    console.log('api.js add exercise id comes? :'+id); // id doesnt come
     const res = await fetch("/api/workouts/" + id, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     });
-
+    console.log(res)
     const json = await res.json();
-
+    console.log(json)
     return json;
   },
   async createWorkout(data = {}) {

@@ -19,7 +19,8 @@ let shouldNavigateAway = false;
 
 async function initExercise() {
   let workout;
-
+  // if continuing from last exercise
+  console.log('initExercise location.search'+location.search) 
   if (location.search.split("=")[1] === undefined) {
     console.log('location.search is undefined so.. createWorkoutand to get location.search')
     workout = await API.createWorkout()
@@ -27,10 +28,7 @@ async function initExercise() {
   }
   if (workout) {
     location.search = "?id=" + workout._id;
-  } else {
-    console.log('initExercise=>work out is empty, workout :'+workout)
-  }
-
+  } 
 }
 
 initExercise();

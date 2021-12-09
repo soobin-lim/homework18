@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const Workout = require("../models/Workout");
-router.post("/api/workouts", ({body}, res)=>{
+const mongojs = require("mongojs");
+
+router.post("/api/workouts", ({ body }, res) => {
   Workout.create(body)
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -9,16 +11,30 @@ router.post("/api/workouts", ({body}, res)=>{
       res.status(400).json(err);
     });
 })
-router.put("/api/workouts/:id", ({body}, res)=>{
-  Workout.updateOne({id: req.params.id}, {body})
-    .then(dbWorkout => {
-      res.json(dbWorkout);
+router.put("/api/workouts/:id", async (req, res) => {
+  let body = req.body;
+  console.log('router, api/workouts/:id:' + req.params.id + "body content:" + body)
+  console.log(body);
+  const response = await Workout.updateOne({ _id: mongojs.ObjectId(req.params.id) },
+    { $push: { exercises: body } }, (err, docs) => {
+      console.log('err:' + err);
+      console.log('docs:' + JSON.stringify(docs));
     })
-    .catch(err => {
-      res.status(400).json(err);
-    });
+  console.log(response);
+  if (response.ok) {
+    res.status(200)
+  } else {
+    res.status(400)
+  }
+
+  // .then(dbWorkout => {
+  //   res.json(dbWorkout);
+  // })
+  // .catch(err => {
+  //   res.status(400).json(err);
+  // });
 })
-router.get("/api/workouts", ({body}, res)=>{
+router.get("/api/workouts", ({ body }, res) => {
   Workout.find({})
     .then(dbWorkout => {
       res.json(dbWorkout);
@@ -59,15 +75,15 @@ router.get("/api/workout", (req, res) => {
     });
 });
 
-router.get('/', (req, res)=>{
+router.get('/', (req, res) => {
   res.sendFile('/public/index.html', { root: '.' })
 });
 
-router.get('/stats', (req, res)=>{
+router.get('/stats', (req, res) => {
   res.sendFile('/public/stats.html', { root: '.' })
 });
 
-router.get('/exercise', (req, res)=>{
+router.get('/exercise', (req, res) => {
   res.sendFile('/public/exercise.html', { root: '.' })
 });
 
